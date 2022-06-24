@@ -1,26 +1,76 @@
 import './App.css';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import { useReducer, useRef } from 'react';
 
 import Home from './pages/Home'
 import Edit from './pages/Edit'
 import New from './pages/New'
 import Diary from './pages/Diary'
 
-//COMPONENTS
-import MyButton from './components/MyButton';
-import MyHeader from './components/MyHeader';
+//REDUCER
+const reducer = (state, action) => {
+  let newState = []
+  switch(action.type) {
+    case 'INIT' : {
+      return action.data
+    }
+    case 'CREATE' : {
+      newState = [...action.data, ...state]
+      break
+    }
+    case 'REMOVE' : {
+      newState = state.filter((it)=>it.id !== action.targetId)
+      break
+    }
+    case 'EDIT':{
+      newState = state.map((it)=>it.id === action.data.id ? {...action.data}:it)
+      break
+    }
+    default:
+      return state
+  }
+  return newState
+}
 
 function App() {
+  //REDUCER
+  const [data, dispatch] = useReducer(reducer,[])
+  
+  const dataId = useRef(0) //일기의 고유 id 생성
+  //CREATE
+  const onCreate = (date, content, emotion) => {
+    dispatch({
+      type:'CREATE', data:{
+        id: dataId.current,
+        date: new Date(date).getTime,
+        content,
+        emotion,
+      },
+    })
+    dataId.current += 1
+  }
+  //REMOVE
+  const onRemove = (targetId) => {
+    dispatch({
+      type:'REMOVE', targetId
+    })
+  }
+  //EDIT
+  const onEdit = (targetId, date, content, emotion) => {
+    dispatch({
+      type:'EDIT',
+      data: {
+        id: targetId,
+        date: new Date(date).getTime,
+        content,
+        emotion,
+      }
+    })
+  }
+
   return (
     <BrowserRouter>
       <div className="App">
-        <MyHeader
-          headText={"App"}
-          leftChild={<MyButton text={'왼쪽버튼'} onClick={()=>alert('왼쪽클릭')}/>}
-          rightChild={<MyButton text={'오른쪽버튼'} onClick={()=>alert('오른쪽클릭')}/>}
-        />
-        <h2>App.js</h2>
-        <MyButton text={"버튼"} onClick={() => alert('버튼 클릭')} type={"positive"}/>
         <Routes>
           <Route path='/' element={<Home />}/>
           <Route path="/new" element={<New/>}/>
