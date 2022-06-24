@@ -44,7 +44,7 @@ const Home = () => {
             new Date(curDate.getFullYear(), curDate.getMonth()-1, curDate.getDate())
         )
     }
-    console.log(new Date().getTime())
+
     return (
         <div>
             <MyHeader
