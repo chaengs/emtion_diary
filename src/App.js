@@ -15,7 +15,7 @@ const reducer = (state, action) => {
       return action.data
     }
     case 'CREATE' : {
-      newState = [...action.data, ...state]
+      newState = [action.data, ...state]
       break
     }
     case 'REMOVE' : {
@@ -81,6 +81,7 @@ function App() {
       },
     })
     dataId.current += 1
+    console.log(data)
   }
   //REMOVE
   const onRemove = (targetId) => {

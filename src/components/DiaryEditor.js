@@ -1,5 +1,6 @@
-import { useRef, useState } from "react"
+import { useContext, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { DiaryDispatchContext } from "../App"
 import EmotionItem from "./EmotionItem"
 import MyButton from "./MyButton"
 import MyHeader from "./MyHeader"
@@ -49,11 +50,22 @@ const DiaryEditor = () => {
     const [emotion, setEmotion] = useState(3) //감정 저장
     const [content, setContent] = useState("")
     const contentRef = useRef()
+    const {onCreate} = useContext(DiaryDispatchContext)
 
+    //감정 상태 저장 함수
     const handleClickEmote = (emotion) => {
         setEmotion(emotion)
     }
     
+    const handleSubmit = () => {
+        if(content.length < 1) {
+            contentRef.current.focus()
+            return
+        }
+        onCreate(date, content, emotion)
+        navigate('/', {replace:true}) //뒤로가기 했을 때 일기작성페이지로 돌아가는 것을 막음
+    }
+
     return (
         <div className='DiaryEditor'>
             <MyHeader headText={'새 일기쓰기'} leftChild={<MyButton text={'뒤로가기'} onClick={()=>navigate(-1)}/>}/>
@@ -76,6 +88,12 @@ const DiaryEditor = () => {
                     <h4>오늘의 일기</h4>
                     <div className='input_box text_wrapper'>
                         <textarea placeholder='오늘 하루는 어땠나요?' ref={contentRef} value={content} onChange={(e)=>setContent(e.target.value)}/>
+                    </div>
+                </section>
+                <section>
+                    <div className='control_box'>
+                        <MyButton text={'취소하기'} onClick={()=>navigate(-1)}/>
+                        <MyButton text={'작성완료'} type={'positive'} onClick={handleSubmit}/>
                     </div>
                 </section>
             </div>
