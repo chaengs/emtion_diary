@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import EmotionItem from "./EmotionItem"
 import MyButton from "./MyButton"
@@ -45,8 +45,10 @@ const getStringDate = (date) => { //날짜 가공
 
 const DiaryEditor = () => {
     const navigate = useNavigate()
-    const [emotion, setEmotion] = useState(3) //감정 저장
     const [date, setDate] = useState(getStringDate(new Date()))//오늘의 날짜를 초깃값으로
+    const [emotion, setEmotion] = useState(3) //감정 저장
+    const [content, setContent] = useState("")
+    const contentRef = useRef()
 
     const handleClickEmote = (emotion) => {
         setEmotion(emotion)
@@ -68,6 +70,12 @@ const DiaryEditor = () => {
                         {emotionList.map((it) => (
                             <EmotionItem key={it.emotion_id} {...it} onClick={handleClickEmote} isSelected={it.emotion_id === emotion}/>
                         ))}
+                    </div>
+                </section>
+                <section>
+                    <h4>오늘의 일기</h4>
+                    <div className='input_box text_wrapper'>
+                        <textarea placeholder='오늘 하루는 어땠나요?' ref={contentRef} value={content} onChange={(e)=>setContent(e.target.value)}/>
                     </div>
                 </section>
             </div>
