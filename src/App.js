@@ -75,7 +75,7 @@ function App() {
   //REDUCER
   const [data, dispatch] = useReducer(reducer, dummyData);
 
-  const dataId = useRef(0); //일기의 고유 id 생성
+  const dataId = useRef(6); //일기의 고유 id 생성
   //CREATE
   const onCreate = (date, content, emotion) => {
     dispatch({
