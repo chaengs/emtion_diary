@@ -19,7 +19,10 @@ const Home = () => {
       const firstDay = new Date(
         curDate.getFullYear(),
         curDate.getMonth(),
-        1
+        0,
+        23, //시
+        59, //분
+        59 //초
       ).getTime();
 
       //매월 말일

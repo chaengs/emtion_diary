@@ -15,7 +15,7 @@ const DiaryEditor = ({ isEdit, originData }) => {
   const [emotion, setEmotion] = useState(3); //감정 저장
   const [content, setContent] = useState("");
   const contentRef = useRef();
-  const { onCreate, onEdit } = useContext(DiaryDispatchContext);
+  const { onCreate, onEdit, onRemove } = useContext(DiaryDispatchContext);
 
   //감정 상태 저장 함수
   const handleClickEmote = (emotion) => {
@@ -42,6 +42,13 @@ const DiaryEditor = ({ isEdit, originData }) => {
     navigate("/", { replace: true }); //뒤로가기 했을 때 일기작성페이지로 돌아가는 것을 막음
   };
 
+  const handleRemove = () => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      onRemove(originData.id);
+      navigate("/", { replace: true });
+    }
+  };
+
   useEffect(() => {
     if (isEdit) {
       setDate(getStringDate(new Date(parseInt(originData.date))));
@@ -54,7 +61,18 @@ const DiaryEditor = ({ isEdit, originData }) => {
     <div className="DiaryEditor">
       <MyHeader
         headText={isEdit ? "일기 수정하기" : "새 일기쓰기"}
-        leftChild={<MyButton text={"뒤로가기"} onClick={() => navigate(-1)} />}
+        leftChild={
+          <MyButton text={"< 뒤로가기"} onClick={() => navigate(-1)} />
+        }
+        rightChild={
+          isEdit && (
+            <MyButton
+              text={"삭제하기"}
+              type={"nagative"}
+              onClick={handleRemove}
+            />
+          )
+        }
       />
       <div>
         <section>
